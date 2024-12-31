@@ -37,8 +37,16 @@ echo "Mengaktifkan GUI default (GNOME)..."
 systemctl set-default graphical.target
 systemctl isolate graphical.target
 
-echo "Mengaktifkan layanan Chrome Remote Desktop untuk $USERNAME..."
-su - "$USERNAME" -c "systemctl --user enable chrome-remote-desktop.service"
-su - "$USERNAME" -c "systemctl --user start chrome-remote-desktop.service"
+echo "Membuat layanan Chrome Remote Desktop untuk $USERNAME..."
+LOGINCTL_STATUS=$(loginctl show-user "$USERNAME" 2>/dev/null)
+
+if [[ -z "$LOGINCTL_STATUS" ]]; then
+    echo "Layanan systemd user-session tidak aktif. Pastikan Anda login ke pengguna $USERNAME sebelum memulai layanan."
+    echo "Layanan belum diaktifkan. Instalasi selesai."
+else
+    su - "$USERNAME" -c "systemctl --user enable chrome-remote-desktop.service"
+    su - "$USERNAME" -c "systemctl --user start chrome-remote-desktop.service"
+    echo "Layanan Chrome Remote Desktop untuk $USERNAME telah diaktifkan."
+fi
 
 echo "Instalasi selesai. Silakan konfigurasi Chrome Remote Desktop melalui https://remotedesktop.google.com/access"

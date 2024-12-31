@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Pastikan script dijalankan sebagai root
+# Pastikan script dijalankan sebagai ro
 if [[ $EUID -ne 0 ]]; then
    echo "Script ini harus dijalankan sebagai root!" 
    exit 1

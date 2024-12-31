@@ -6,6 +6,15 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
+# Meminta nama pengguna
+read -p "Masukkan nama pengguna untuk Chrome Remote Desktop: " USERNAME
+
+# Memastikan pengguna ada
+if ! id "$USERNAME" &>/dev/null; then
+    echo "Pengguna $USERNAME tidak ditemukan. Pastikan pengguna telah dibuat sebelumnya."
+    exit 1
+fi
+
 echo "Mengupdate sistem..."
 yum update -y
 
@@ -20,16 +29,16 @@ wget https://dl.google.com/linux/direct/chrome-remote-desktop_current_x86_64.rpm
 echo "Menginstal Chrome Remote Desktop..."
 yum localinstall -y chrome-remote-desktop.rpm
 
-echo "Mengatur akses Chrome Remote Desktop..."
+echo "Mengatur akses Chrome Remote Desktop untuk $USERNAME..."
 groupadd chrome-remote-desktop || echo "Group sudah ada"
-usermod -aG chrome-remote-desktop $USER
+usermod -aG chrome-remote-desktop "$USERNAME"
 
 echo "Mengaktifkan GUI default (GNOME)..."
 systemctl set-default graphical.target
 systemctl isolate graphical.target
 
-echo "Mengaktifkan layanan Chrome Remote Desktop..."
-systemctl enable chrome-remote-desktop@$USER.service
-systemctl start chrome-remote-desktop@$USER.service
+echo "Mengaktifkan layanan Chrome Remote Desktop untuk $USERNAME..."
+su - "$USERNAME" -c "systemctl --user enable chrome-remote-desktop.service"
+su - "$USERNAME" -c "systemctl --user start chrome-remote-desktop.service"
 
 echo "Instalasi selesai. Silakan konfigurasi Chrome Remote Desktop melalui https://remotedesktop.google.com/access"

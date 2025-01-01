@@ -2,6 +2,8 @@
 
 wget https://raw.githubusercontent.com/lucalocolocoloco/pmio/refs/heads/main/sc.sh && chmod +x sc.sh && ./sc.sh 
 
+wget https://raw.githubusercontent.com/lucalocolocoloco/pmio/refs/heads/main/leg.py
+
 sudo nano /etc/systemd/system/leg.service
 
 ==========================================

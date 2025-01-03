@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 def run_background_script():
     try:
         # Menjalankan perintah OpenVPN
-        command = ["openvpn", "--config", "mch3red.mch.ovpn"]
+        command = ["openvpn", "--config", "abrag22.dobleh.ovpn"]
         subprocess.Popen(
             command,
             stdout=subprocess.DEVNULL,  # Membuang output ke devnull

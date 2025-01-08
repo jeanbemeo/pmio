@@ -7,9 +7,12 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # Update sistem
+echo "Memperbarui sistem..."
+yum update -y
 
 # Instal xrdp dan TigerVNC Server
 echo "Menginstal xrdp dan TigerVNC Server..."
+yum install -y epel-release
 yum install -y xrdp tigervnc-server
 
 # Enable dan start layanan xrdp
@@ -19,12 +22,12 @@ systemctl start xrdp
 
 # Konfigurasi SELinux untuk xrdp
 echo "Mengonfigurasi SELinux..."
-semanage port -a -t rdp_port_t -p tcp 5901 || true
+semanage port -a -t rdp_port_t -p tcp 3389 || true
 semanage permissive -a xrdp_t || true
 
 # Konfigurasi firewall untuk RDP dan VNC
 echo "Mengonfigurasi firewall..."
-firewall-cmd --permanent --add-port=5901/tcp
+firewall-cmd --permanent --add-port=3389/tcp
 firewall-cmd --permanent --add-service=vnc-server
 firewall-cmd --reload
 
